@@ -41,10 +41,6 @@ async function run() {
 
     app.get('/mytoys/:email',async(req,res)=>{
       console.log(req.params.email);
-      // let query={};
-      // if(req.query?.postedBy){
-      //   query={postedBy:req.query.postedBy}
-      // }
       const result=await toyCollection.find({postedBy:req.params.email}).toArray();
       res.send(result);
     });
@@ -52,9 +48,32 @@ async function run() {
 
     app.get('/alltoys/:id',async(req,res)=>{
         const id=req.params.id;
+        console.log(id);
         const result=await toyCollection.findOne({_id:new ObjectId(id)});
         res.send(result);
+        console.log(result);
     });
+    app.put('/alltoys/:id',async(req,res)=>{
+      const id=req.params.id;
+      const update=req.body;
+      const query={ _id: new ObjectId(id)};
+      const options = { upsert: true };
+      const updatedToys={
+          $set:{
+              toyname:update.toyname,
+              description:update.description,
+              image:update.image,
+              category:update.category,
+              quantity:update.quantity,
+              sellername:update.sellername,
+              rating:update.rating,
+              postedBy:update.postedBy,
+              price:update.price
+          }
+      }
+      const result=await  toyCollection.updateOne(query, updatedToys, options);
+      res.send(result);
+  });
 
     app.delete('/mytoys/:id',async(req,res)=>{
       const id=req.params.id;
