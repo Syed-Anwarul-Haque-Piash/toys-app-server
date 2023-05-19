@@ -38,6 +38,18 @@ async function run() {
         const result=await toyCollection.find().toArray();
         res.send(result);
     })
+
+    app.get('/mytoys/:email',async(req,res)=>{
+      console.log(req.params.email);
+      // let query={};
+      // if(req.query?.postedBy){
+      //   query={postedBy:req.query.postedBy}
+      // }
+      const result=await toyCollection.find({postedBy:req.params.email}).toArray();
+      res.send(result);
+    });
+
+
     app.get('/alltoys/:id',async(req,res)=>{
         const id=req.params.id;
         const result=await toyCollection.findOne({_id:new ObjectId(id)});
