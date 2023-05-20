@@ -26,6 +26,14 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
     const toyCollection=client.db('toyMarket').collection('toys');
+    const indexKey = { name: 1, sellerName: 1 };
+    const indexOptions = { multipleFinding: "webfinding" };
+    //search
+    app.get('/search/:text',async(req,res)=>{
+      const searchText=req.params.text;
+      const result=await toyCollection.find({$or:[{toyname:{$regex:searchText,$options:"i"}}]}).toArray();
+      res.send(result);
+    })
 
     app.post('/addtoy',async(req,res)=>{
         const toy=req.body;
@@ -35,6 +43,7 @@ async function run() {
     })
 
     app.get('/alltoys',async(req,res)=>{
+      
         const result=await toyCollection.find().toArray();
         res.send(result);
     })
