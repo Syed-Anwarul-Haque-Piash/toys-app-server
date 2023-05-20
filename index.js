@@ -50,7 +50,7 @@ async function run() {
 
     app.get('/mytoys/:email',async(req,res)=>{
       console.log(req.params.email);
-      const result=await toyCollection.find({postedBy:req.params.email}).toArray();
+      const result=await toyCollection.find({postedBy:req.params.email}).sort({price:-1}).toArray();
       res.send(result);
     });
 
